@@ -21,6 +21,18 @@ app.use('/api', indexRoutes);
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
+const productRoutes = require('./routes/product.routes');
+app.use('/api', productRoutes);
+
+const purchaseRoutes = require('./routes/purchase.routes');
+app.use('/api', purchaseRoutes);
+
+const favoritesRoutes = require('./routes/favorites.routes');
+app.use('/api', favoritesRoutes);
+
+const reviewsRoutes = require('./routes/reviews.routes');
+app.use('/api', reviewsRoutes);
+
 //COMPLETAR COM OS DOIS EXEMPLOS EM CIMA. USAR O CAMINHO E METER SÓ API EM BAIXO
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes

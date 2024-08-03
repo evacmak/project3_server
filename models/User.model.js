@@ -20,7 +20,7 @@ const userSchema = new Schema(
     address: { type: String, required: true },
     favoriteProducts: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
-    cart: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+    purchases: [{ type: Schema.Types.ObjectId, ref: 'Purchase' }],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

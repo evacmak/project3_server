@@ -15,37 +15,60 @@ router.post('/review/:userId/:productId', async (req, res, next) => {
       author: userId,
       product: productId,
     });
+
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        //$set will either add or remove the id depending if it's there already
+        // push to push, pull to remove
+        $push: {
+          reviews: newReview._id,
+        },
+      },
+      { new: true },
+    );
+
+    await Product.findByIdAndUpdate(
+      productId,
+      {
+        //$set will either add or remove the id depending if it's there already
+        // push to push, pull to remove
+        $push: {
+          reviews: newReview._id,
+        },
+      },
+      { new: true },
+    );
     res.status(201).json(newReview);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.put('/review/:userId/:productId', async (req, res, next) => {
+router.put('/review/:userId/:reviewId', async (req, res, next) => {
   try {
-    const { productId, userId } = req.params;
+    const { userId, reviewId } = req.params;
+    const { comment, rating, skinType, skinConcern } = req.body;
 
-    const getReview = await User.findByIdAndUpdate(
-      userId,
-      {
-        //$set will either add or remove the id depending if it's there already
-        // push to push, pull to remove
-        $push: {
-          productReview: productId,
-        },
-      },
+    const foundReview = await Review.findById(reviewId);
+    if (foundReview.author !== userId) {
+      res.status(403).json({ message: 'Unauthorized user' });
+      return;
+    }
+
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      { comment, rating, skinType, skinConcern },
       { new: true },
     );
-
-    // for the review, do the same as above but also delete he review afterwards
-    // await Review.findByIdAndDelete(reviewId)
-    res.status(200).json(getReview);
+    res.status(201).json(updatedReview);
   } catch (error) {
     console.error(error);
   }
 });
 
-router.delete('/review/:userId/:productId', async (req, res, next) => {
+//COMPLETAR COM O EXEMPLO ACIMA DO USERID VERIFICAÇÃO
+router.delete('/review/:userId/:reviewId', async (req, res, next) => {
   try {
     const { reviewId } = req.params;
     await Review.findByIdAndDelete(reviewId);

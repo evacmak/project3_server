@@ -4,7 +4,7 @@ const User = require('../models/User.model');
 
 router.post('/product', async (req, res, next) => {
   try {
-    const { title, description, subtitle, color } = req.body;
+    const { title, description, subtitle, color, quantity } = req.body;
     const newProduct = await Product.create({
       title,
       subtitle,
@@ -30,39 +30,25 @@ router.get('/product', async (req, res, next) => {
   }
 });
 
+//Search product
+router.get('/product/search', async (req, res, next) => {
+  try {
+    const searchProduct = await Product.find({
+      ...req.query,
+    });
+
+    res.status(200).json(searchProduct);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 //Get by id (single product)
 router.get('/product/:productId', async (req, res, next) => {
   try {
     const { productId } = req.params;
     const singleProduct = await Product.findById(productId);
     res.status(200).json(singleProduct);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-//Get by id CART
-router.get('/cart/:userId', async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const userWithCart = await User.findById(userId).populate('cart');
-    res.status(200).json(userWithCart);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-router.get('/product/search', async (req, res, next) => {
-  try {
-    const { title, subtitle, description, color } = req.query;
-    const searchProduct = await Product.find({
-      title,
-      subtitle,
-      description,
-      color,
-    });
-
-    res.status(200).json(searchProduct);
   } catch (error) {
     console.error(error);
   }
@@ -80,21 +66,3 @@ router.delete('/product/:productId', async (req, res, next) => {
 });
 
 module.exports = router;
-
-router.post('/review/:userId/:productId', async (req, res, next) => {
-  try {
-    const { userId, productId } = req.params;
-    const { comment, rating, skinType, skinConcern } = req.body;
-    const newReview = await Review.create({
-      comment,
-      rating,
-      skinType,
-      skinConcern,
-      author: userId,
-      product: productId,
-    });
-    res.status(201).json(newReview);
-  } catch (error) {
-    console.error(error);
-  }
-});

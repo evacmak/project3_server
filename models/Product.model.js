@@ -9,6 +9,6 @@ const productSchema = new Schema({
   reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 });
 
-const Product = model('Product', userSchema);
+const Product = model('Product', productSchema);
 
 module.exports = Product;

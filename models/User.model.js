@@ -17,7 +17,7 @@ const userSchema = new Schema(
     },
     name: { type: String, required: true },
     lastName: { type: String, required: true },
-    address: { type: String, required: true },
+    address: { type: String },
     favoriteProducts: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
     purchases: [{ type: Schema.Types.ObjectId, ref: 'Purchase' }],

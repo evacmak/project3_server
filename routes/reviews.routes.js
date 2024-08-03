@@ -51,7 +51,8 @@ router.put('/review/:userId/:reviewId', async (req, res, next) => {
     const { comment, rating, skinType, skinConcern } = req.body;
 
     const foundReview = await Review.findById(reviewId);
-    if (foundReview.author !== userId) {
+    console.log(foundReview.author);
+    if (foundReview.author.toString() !== userId) {
       res.status(403).json({ message: 'Unauthorized user' });
       return;
     }
@@ -70,8 +71,38 @@ router.put('/review/:userId/:reviewId', async (req, res, next) => {
 //COMPLETAR COM O EXEMPLO ACIMA DO USERID VERIFICAÇÃO
 router.delete('/review/:userId/:reviewId', async (req, res, next) => {
   try {
-    const { reviewId } = req.params;
+    const { reviewId, userId } = req.params;
+
+    const foundReview = await Review.findById(reviewId);
+    if (foundReview.author.toString() !== userId) {
+      res.status(403).json({ message: 'Unauthorized user' });
+      return;
+    }
     await Review.findByIdAndDelete(reviewId);
+
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        //$set will either add or remove the id depending if it's there already
+        // push to push, pull to remove
+        $pull: {
+          reviews: reviewId,
+        },
+      },
+      { new: true },
+    );
+
+    await Product.findByIdAndUpdate(
+      foundReview.product,
+      {
+        //$set will either add or remove the id depending if it's there already
+        // push to push, pull to remove
+        $pull: {
+          reviews: reviewId,
+        },
+      },
+      { new: true },
+    );
 
     res.status(204).send();
   } catch (error) {

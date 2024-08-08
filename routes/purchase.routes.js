@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Purchase = require('../models/Purchase.model');
 const Product = require('../models/Product.model');
+const User = require('../models/User.model');
 
 router.post('/purchase', async (req, res, next) => {
   try {
@@ -27,6 +28,11 @@ router.post('/purchase', async (req, res, next) => {
       total,
       address,
       products,
+    });
+
+    purchasedProducts.forEach(async (product, index) => {
+      product.quantity -= products[index].quantity;
+      await product.save();
     });
 
     if (userId) {

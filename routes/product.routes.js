@@ -47,7 +47,7 @@ router.get('/product/search', async (req, res, next) => {
 router.get('/product/:productId', async (req, res, next) => {
   try {
     const { productId } = req.params;
-    const singleProduct = await Product.findById(productId);
+    const singleProduct = await Product.findById(productId).populate('reviews');
     res.status(200).json(singleProduct);
   } catch (error) {
     console.error(error);

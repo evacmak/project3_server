@@ -7,6 +7,8 @@ const productSchema = new Schema({
   color: { type: String },
   quantity: { type: Number },
   reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
+  imageUrl: { type: String },
+  price: { type: Number },
 });
 
 const Product = model('Product', productSchema);

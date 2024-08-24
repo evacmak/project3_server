@@ -56,7 +56,6 @@ router.put('/review/:userId/:reviewId', async (req, res, next) => {
       res.status(403).json({ message: 'Unauthorized user' });
       return;
     }
-
     const updatedReview = await Review.findByIdAndUpdate(
       reviewId,
       { comment, rating, skinType, skinConcern },

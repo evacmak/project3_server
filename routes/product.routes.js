@@ -4,7 +4,8 @@ const User = require('../models/User.model');
 
 router.post('/product', async (req, res, next) => {
   try {
-    const { title, description, subtitle, color, quantity } = req.body;
+    const { title, description, subtitle, color, quantity, imageUrl, price } =
+      req.body;
     const newProduct = await Product.create({
       title,
       subtitle,
@@ -12,6 +13,8 @@ router.post('/product', async (req, res, next) => {
       color,
       quantity,
       reviews: [],
+      imageUrl,
+      price,
     });
     res.status(201).json(newProduct);
   } catch (error) {
